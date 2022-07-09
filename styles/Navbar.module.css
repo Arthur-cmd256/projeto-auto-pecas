@@ -1,0 +1,12 @@
+.nav {
+    background-color: #383838;
+}
+
+.opcoesNav {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.opcoesNav:hover {
+    color: #e23918;
+}

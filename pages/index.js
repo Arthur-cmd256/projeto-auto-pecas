@@ -17,7 +17,7 @@ export default function Home() {
 
         <div className="row">
           <h3 id="titulo-menu">
-            Produtos
+            Produtos em destaque
             <hr />
           </h3>
         </div>
@@ -25,8 +25,8 @@ export default function Home() {
         <div className="row justify-content-center">
 
           <div className={`col-7 col-sm-5 col-sm-4 col-md-3 col-xxl-2 mx-4 mb-3 ${styles.cartao}`}>
-            <div id={styles.cartaoTopo} className="row justify-content-center pt-2">
-              <p>FRETE GRÁTIS SUL E SUDESTE</p>
+            <div id={styles.cartaoTopo} className="row justify-content-center py-2">
+              <p className='m-0'>FRETE GRÁTIS SUL E SUDESTE</p>
             </div>
             <Link href="/detalhe">
               <a className="row justify-content-center py-2">
@@ -34,9 +34,9 @@ export default function Home() {
               </a>
             </Link>
             <div className="row">
-              <h4>Filtro Oleo Do Motor 1.0 Corsa Classic 2012 2013 2014</h4>
+              <h5 className={`m-0`}>Filtro Oleo Do Motor 1.0 Corsa Classic</h5>
             </div>
-            <div className="row d-flex mt-2">
+            <div className="row d-flex">
               <div className="col-1">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#F19800" className="bi bi-star-fill" viewBox="0 0 16 16">
                   <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
@@ -64,13 +64,13 @@ export default function Home() {
               </div>
             </div>
             <div className="row mt-3">
-              <p className="text-"><span className={styles.span}>R$ 320,68</span></p>
+              <p className='m-0'><span className={styles.span}>R$ 320,68</span></p>
             </div>
-            <div className="row mt-1 mb-0 h4">
-              <h5 className="">R$ 271,29</h5>
+            <div className="row mt-2 mb-0 h4">
+              <h5 className="m-0">R$ 271,29</h5>
             </div>
-            <div className="row mt-0 mb-3 p-0">
-              <p className="">em Pix ou 1x no cartão</p>
+            <div className="row mt-0 mb-2 p-0">
+              <p className="m-0">em Pix ou 1x no cartão</p>
             </div>
           </div>
 

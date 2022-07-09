@@ -7,7 +7,7 @@
 }
 
 #cartaoTopo {
-    background: #e23918
+    background: #FF7A47
 }
 
 #cartaoTopo p {
@@ -16,7 +16,6 @@
     text-align: center;
     font-weight: bold;
 }
-
 .span {
     text-decoration: line-through;
 }

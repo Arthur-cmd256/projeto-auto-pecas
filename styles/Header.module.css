@@ -1,5 +1,17 @@
+.header {
+    background: #ffffff;
+}
+
+.titulo {
+    color: #4E5166;
+}
+
+.subtitulo {
+    color: #F79256;
+}
+
 .botao{
-    background: #e23918; 
+    background: #4E5166; 
     color: #ffffff;
     font-weight: bold;
 }

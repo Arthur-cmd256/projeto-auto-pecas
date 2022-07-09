@@ -1,0 +1,21 @@
+.cartao {
+    box-shadow: 1px 1px 3px #cccccc;
+}
+
+.cartao:hover {
+    box-shadow: 1px 1px 3px #aaaaaa;
+}
+
+#cartaoTopo {
+    background: #4E5166
+}
+
+#cartaoTopo p {
+    color: #ffffff;
+    font-size: small;
+    text-align: center;
+    font-weight: bold;
+}
+.span {
+    text-decoration: line-through;
+}

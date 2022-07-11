@@ -8,15 +8,14 @@ export default function Home() {
     <>
 
       <Head>
-        <title>Home</title>
+        <title>Classic</title>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
-
       </Head>
       <main className={`col-md-10 offset-md-1 ${styles.main}`}>
 
         <div className="row">
-          <h4 id="titulo-menu">
+          <h4>
             Produtos em destaque
             <hr/>
           </h4>

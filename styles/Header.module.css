@@ -15,3 +15,8 @@
     color: #ffffff;
     font-weight: bold;
 }
+
+.botao:hover {
+    background: #4e5166ef;
+    color: #ffffff;
+}

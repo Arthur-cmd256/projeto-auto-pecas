@@ -14,3 +14,43 @@ a {
 * {
 	box-sizing: border-box;
 }
+
+.botao{
+    background: #4E5166; 
+    color: #ffffff;
+}
+
+.botao:hover {
+    background: #4e5166ef;
+    color: #ffffff;
+}
+
+.botao-sec {
+	background: #f79256;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+.botao-sec:hover {
+	background: #f79156ef;
+	color: #ffffff;
+
+}
+
+.next-icon {
+	color: #4E5166;
+	background: #4E5166;
+}
+
+.lineThrough {
+    text-decoration: line-through;
+}
+
+.link {
+	color: #f79256;
+	text-decoration: underline;
+}
+
+.link:hover {
+	color: #4E5166;
+}

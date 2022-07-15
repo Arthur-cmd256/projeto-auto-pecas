@@ -19,7 +19,7 @@ export default function Busca() {
                 </div>
 
                 <div className="row justify-content-center">
-                    <CardProduct/>
+                    {/* <CardProduct/> */}
                 </div>
 
             </main>

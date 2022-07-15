@@ -3,7 +3,18 @@ import styles from '../styles/Home.module.css'
 
 import CardProduct from '../components/CardProduct'
 
-export default function Home() {
+export async function getStaticProps() {
+
+  const data = await fetch('https://pwprojetoback-end.herokuapp.com/produto')
+  const produtos = await data.json()
+
+  return {
+    props: {produtos}
+  }
+
+}
+
+export default function Home({ produtos }) {
   return (
     <>
 
@@ -14,14 +25,16 @@ export default function Home() {
       </Head>
       <main className={`col-md-10 offset-md-1 ${styles.main}`}>
 
-        <div className="row">
+        <div className="row mw-100">
           <h4>
             Produtos em destaque
             <hr/>
           </h4>
         </div>
         <div className="row justify-content-center">
-          <CardProduct/>
+          {produtos.map((produto) => (
+            <CardProduct className="d-inline" key={produto._id} value={produto}/>
+          ))}
         </div>
 
       </main>

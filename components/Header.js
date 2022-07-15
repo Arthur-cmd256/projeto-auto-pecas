@@ -8,7 +8,7 @@ export default function Header() {
     return (
 
         <header className={styles.header}>
-            <div className="row align-items-center py-2">
+            <div className="row mw-100 align-items-center py-2">
                 <Link href="/">
                     <a className="col-2 col-md-1 offset-md-1 offset-lg-2 p-2 text-center">
                         <h3 className='m-0'><b className={styles.titulo}>CLASSIC</b></h3>

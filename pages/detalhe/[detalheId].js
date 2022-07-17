@@ -1,7 +1,40 @@
 import Head from "next/head"
 import Image from "next/image"
 
-export default function Detalhe() {
+export async function getStaticProps(context) {
+    const {params} = context
+
+    const data = await fetch(`https://pwprojetoback-end.herokuapp.com/produto/${params.detalheId}`)
+
+    const produto = await data.json()
+
+    return {
+        props: { produto }
+    }
+}
+
+export async function getStaticPaths() {
+
+    const response = await fetch('https://pwprojetoback-end.herokuapp.com/produto')
+
+    const data = await response.json()
+
+    const paths = data.map((produto) => {
+        return {
+            params: {
+                detalheId: `${produto._id}`
+            }
+        }
+    })
+
+    return { paths, fallback: false }
+}
+
+export default function Detalhe({ produto }) {
+    const img = produto.img_produto.split("|");
+    produto.val_produto = parseFloat(produto.val_produto).toFixed(2)
+    const val_desc = parseFloat(produto.val_produto - ((produto.val_produto * 15) / 100)).toFixed(2);
+    const val_antigo = parseFloat(parseFloat(produto.val_produto) + parseFloat(((produto.val_produto * 15) / 100))).toFixed(2);
     return (
         <>
             <Head>
@@ -15,13 +48,13 @@ export default function Detalhe() {
                         <div className="row">
                             <div className="col-2">
                                 <button type="button" data-bs-target="#demo" data-bs-slide-to="0" className="active d-block btn">
-                                    <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" />
+                                    <Image src={img[0]} width="400px" height="400px" alt="" />
                                 </button>
                                 <button type="button" data-bs-target="#demo" data-bs-slide-to="1" className="d-block btn">
-                                    <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" />
+                                    <Image src={img[1]}  width="400px" height="400px" alt="" />
                                 </button>
                                 <button type="button" data-bs-target="#demo" data-bs-slide-to="2" className="d-block btn">
-                                    <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" />
+                                    <Image src={img[2]}  width="400px" height="400px" alt="" />
                                 </button>
                             </div>
                             <div className="col-10">
@@ -29,13 +62,13 @@ export default function Detalhe() {
 
                                     <div className="carousel-inner text-center">
                                         <div className="carousel-item active">
-                                            <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[0]}  width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                         <div className="carousel-item">
-                                            <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[1]}  width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                         <div className="carousel-item">
-                                            <Image src="/images/filtro-oleo-1.png" width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[2]}  width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                     </div>
 
@@ -62,22 +95,22 @@ export default function Detalhe() {
                             </span>
                         </div> */}
                         <div className="row">
-                            <p className="m-0">Classificação: filtro</p>
+                            <p className="m-0">Classificação: {produto.cat_produto}</p>
                             <h4>
-                                Filtro Oléo Do Motor 1.0 Corsa Classic 2012 2013 2014
+                                {produto.nom_produto}
                             </h4>
-                            <p>Cód. Item: 123456789</p>
+                            <p>Cód. Item: {produto._id}</p>
                         </div>
                         <div className="row d-flex d-flex align-items-center p-1">
                             <div className="col">
-                                <p className='m-0'><span className="lineThrough">R$ 320,68</span></p>
-                                <h5 className="m-0">R$ 271,29</h5>
-                                <p className="m-0">ou até 10x de R$ 300,00 sem juros</p>
+                                <p className='m-0'><span className="lineThrough">R$ {val_antigo.replace('.', ",")}</span></p>
+                                <h4 className="m-0"><b>R$ {val_desc.replace('.', ",")}</b></h4>
+                                <p className="m-0">ou até 10x de R$ {(produto.val_produto / 10).toFixed(2).replace('.', ",")} no cartão</p>
 
                             </div>
                             <div className="col">
                                 <div className="row text-center">
-                                    <p className="m-0">Quantidade em estoque: 1</p>
+                                    <p className="m-0">Quantidade em estoque: {produto.qtd_produto}</p>
                                     <button className="d-block btn botao-sec mb-1">Comprar</button>
                                     <button className="btn botao">Adicionar ao carrinho</button>
                                 </div>
@@ -91,7 +124,7 @@ export default function Detalhe() {
                         <div className="row border border-dark rounded my-3 mx-1 p-1">
                             <h5>Descrição</h5>
                             <p>
-                                88905845 Filtro de Oleo do Motor (Para Motores GM 1.0 / 1.4 / 1.6 / 1.8/ 2.0 / 2.2 / 2.4)F
+                                {produto.des_produto}
                             </p>
                         </div>
                     </div>

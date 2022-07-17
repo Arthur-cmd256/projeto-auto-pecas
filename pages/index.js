@@ -9,7 +9,7 @@ export async function getStaticProps() {
   const produtos = await data.json()
 
   return {
-    props: {produtos}
+    props: { produtos }
   }
 
 }
@@ -20,7 +20,7 @@ export default function Home({ produtos }) {
 
       <Head>
         <title>Classic</title>
-        <meta charset="UTF-8"/>
+        <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
       </Head>
       <main className={`col-md-10 offset-md-1 ${styles.main}`}>
@@ -28,13 +28,18 @@ export default function Home({ produtos }) {
         <div className="row mw-100">
           <h4>
             Produtos em destaque
-            <hr/>
+            <hr />
           </h4>
         </div>
         <div className="row justify-content-center">
-          {produtos.map((produto) => (
-            <CardProduct className="d-inline" key={produto._id} value={produto}/>
-          ))}
+          {produtos.map((produto) => {
+            if (produto.ind_destaque) {
+              return (
+                <CardProduct key={produto._id} value={produto} />
+              )
+            }
+          })
+          }
         </div>
 
       </main>

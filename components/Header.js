@@ -3,8 +3,11 @@ import Link from 'next/link'
 
 import styles from '../styles/Header.module.css'
 
+import { useState } from 'react'
 
 export default function Header() {
+    let [busca, setBusca] = useState("")
+
     return (
 
         <header className={styles.header}>
@@ -17,11 +20,12 @@ export default function Header() {
                 </Link>
                 <div className="col-6 text-center">
                     <form className="row">
+                        
                         <div className="col-8 offset-md-2 text-center p-0">
-                            <input className="form-control" type="text" placeholder="Busca" />
+                            <input className="form-control" type="text" placeholder="Busca" onKeyUp={(e) => setBusca(e.target.value)} />
                         </div>
                         <div className=" col-1 text-center">
-                            <Link href="/busca">
+                            <Link href={`/busca?value=${busca}`}>
                                 <a>
                                     <button className={`btn ${styles.botao}`} type="button">OK</button>
                                 </a>
@@ -55,3 +59,11 @@ export default function Header() {
         </header>
     )
 }
+
+// var busca = document.getElementById('busca');
+
+// busca.addEventListener("keypress", function(evento){
+//     if (evento.keyCode == 13){
+//         console.log(foi)
+//     }
+// });

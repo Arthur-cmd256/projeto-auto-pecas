@@ -39,7 +39,7 @@ function Buscar(busca) {
                 </div>
 
                 <div className="row text-center">
-                    <p>Produto não encontradoa</p>
+                    <p>Produto não encontrado</p>
                 </div>
             </>
         )

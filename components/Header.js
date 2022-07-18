@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import styles from '../styles/Header.module.css'
@@ -6,6 +6,7 @@ import styles from '../styles/Header.module.css'
 import { useState } from 'react'
 
 export default function Header() {
+    const router = useRouter()
     let [busca, setBusca] = useState("")
 
     return (
@@ -19,13 +20,13 @@ export default function Header() {
                     </a>
                 </Link>
                 <div className="col-6 text-center">
-                    <form className="row">
-                        
+                    <form onSubmit={() => router.push(`/busca/${busca}`) } className="row">
+
                         <div className="col-8 offset-md-2 text-center p-0">
-                            <input className="form-control" type="text" placeholder="Busca" onKeyUp={(e) => setBusca(e.target.value)} />
+                            <input className="form-control" type="text" placeholder="Busca"onKeyUp={(e) => setBusca(e.target.value)}/>
                         </div>
                         <div className=" col-1 text-center">
-                            <Link href={`/busca?value=${busca}`}>
+                            <Link href={`/busca/${busca}`}>
                                 <a>
                                     <button className={`btn ${styles.botao}`} type="button">OK</button>
                                 </a>
@@ -59,11 +60,3 @@ export default function Header() {
         </header>
     )
 }
-
-// var busca = document.getElementById('busca');
-
-// busca.addEventListener("keypress", function(evento){
-//     if (evento.keyCode == 13){
-//         console.log(foi)
-//     }
-// });

@@ -1,7 +1,133 @@
+import axios from "axios";
+
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from 'next/router'
+
+import { useState } from 'react'
+import { useEffect } from "react";
+
+
+function Logar() {
+    const router = useRouter()
+
+    const [enviar, setEnviar] = useState(false);
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [error, setError] = useState(false);
+    const [isLoading, setLoading] = useState(false)
+
+
+
+    // des_email: email, des_senha: senha
+    useEffect(() => {
+        if (enviar) {
+            setLoading(true)
+            axios.post('https://pwprojetoback-end.herokuapp.com/cliente/login', {
+                des_email: email,
+                des_senha: senha
+            }).then((res) => {
+                window.sessionStorage.setItem("token", res.data.token);
+                window.sessionStorage.setItem("id", res.data.cliente._id);
+                window.sessionStorage.setItem("nome", res.data.cliente.nom_cliente);
+                router.push(`/conta`);
+                setEnviar(false);
+                setLoading(false);
+            }).catch((erro) => {
+                console.log(erro);
+                setEnviar(false);
+                setError(true);
+                setLoading(false);
+            })
+        }
+    }, [email, enviar, router, senha]);
+
+    if (isLoading) return (
+        <div className="d-flex justify-content-center">
+            <div className="spinner-border text-secondary" role="status">
+                <span className="sr-only"></span>
+            </div>
+        </div>
+    )
+
+    if (error) {
+        return (
+            <>
+                <div className="row my-3">
+                    <div className="alert alert-danger" role="alert">
+                        <p className="text-center m-0">Usuario ou senha incorretos</p>
+                    </div>
+                </div>
+                <div className="row">
+                    <h5 className="text-center">
+                        Entrar
+                    </h5>
+                </div>
+
+                <div className="row">
+                    <form>
+                        <label>
+                            E-mail
+                        </label>
+                        <input id="des_email" type="email" className="form-control" placeholder="Digite o seu email" onKeyUp={(e) => setEmail(e.target.value)} />
+                        <label>Senha</label>
+                        <input id="des_senha" type="password" className="form-control" placeholder="Digite sua senha" onKeyUp={(e) => setSenha(e.target.value)} />
+                        <p>Esqueci minha senha, <Link href="/esqueci"><a className="link">clique aqui</a></Link></p>
+                        <button type="button" className="btn botao-sec" onClick={() => { setEnviar(true) }}>Entrar</button>
+                    </form>
+                </div>
+                <div className="row mt-5">
+                    <div className="col text-center">
+                        <h5>
+                            Ainda não tem cadastro?
+                        </h5>
+                        <Link href="/cadastro">
+                            <button type="button" className="btn botao">Clique aqui para se cadastrar</button>
+                        </Link>
+                    </div>
+                </div>
+            </>
+        )
+
+    } else if (!error) {
+        return (
+            <>
+                <div className="row">
+                    <h5 className="text-center">
+                        Entrar
+                    </h5>
+                </div>
+
+                <div className="row">
+                    <form>
+                        <label>
+                            E-mail
+                        </label>
+                        <input id="des_email" type="email" className="form-control" placeholder="Digite o seu email" onKeyUp={(e) => setEmail(e.target.value)} />
+                        <label>Senha</label>
+                        <input id="des_senha" type="password" className="form-control" placeholder="Digite sua senha" onKeyUp={(e) => setSenha(e.target.value)} />
+                        <p>Esqueci minha senha, <Link href="/esqueci"><a className="link">clique aqui</a></Link></p>
+                        <button type="button" className="btn botao-sec" onClick={() => { setEnviar(true) }}>Entrar</button>
+                    </form>
+                </div>
+                <div className="row mt-5">
+                    <div className="col text-center">
+                        <h5>
+                            Ainda não tem cadastro?
+                        </h5>
+                        <Link href="/cadastro">
+                            <button type="button" className="btn botao">Clique aqui para se cadastrar</button>
+                        </Link>
+                    </div>
+                </div>
+            </>
+        )
+    }
+}
+
 
 export default function Login() {
+
     return (
         <>
             <Head>
@@ -18,55 +144,10 @@ export default function Login() {
                 </div>
                 <div className="row">
                     <div className="offset-3 col-6">
-                        <div className="row">
-                            <h5 className="text-center">
-                                Entrar
-                            </h5>
-                        </div>
-                        <div className="row">
-                            <form>
-                                <label>
-                                    E-mail
-                                </label>
-                                <input id="email" type="email" className="form-control" placeholder="Digite o seu email" />
-                                <label>Senha</label>
-                                <input id="senha" type="password" className="form-control" placeholder="Digite sua senha" />
-                                <p>Esqueci minha senha, <Link href="/esqueci"><a className="link">clique aqui</a></Link></p>
-                                <button type="button" className="btn botao-sec" onClick={() => login()}>Entrar</button>
-                            </form>
-                        </div>
-                        <div className="row mt-5">
-                            <div className="col text-center">
-                                <h5>
-                                    Ainda não tem cadastro?
-                                </h5>
-                                <Link href="/cadastro">
-                                    <button type="button" className="btn botao">Clique aqui para se cadastrar</button>
-                                </Link>
-                            </div>
-
-
-                        </div>
+                        {Logar()}
                     </div>
                 </div>
             </main>
         </>
     )
 }
-
-function login(){
-
-    if(email.value.length<6 || email.value.indexOf("@") <=0 || email.value.lastIndexOf(".") <=email.value.indexOf("@")  ){
-        alert("Informe um e-mail válido!!");
-        email.focus();
-        return false;
-    }
-
-    if(document.getElementById("senha").value.length === 0){
-    alert('Por favor, preencha sua senha');
-    document.getElementById("senha").focus();
-    return false
-    }
-    
-    alert("tudo certo!!!!");
-}  

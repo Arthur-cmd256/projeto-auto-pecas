@@ -1,4 +1,124 @@
+import axios from "axios";
 import Head from "next/head"
+import Link from "next/link";
+
+import { useState } from 'react'
+import { useEffect } from "react";
+
+function BuscaCesta() {
+
+    const [token, setToken] = useState('')
+    const [dataCesta, setDataCesta] = useState({})
+    const [error, setError] = useState(false)
+    const [isLoading, setLoading] = useState(false)
+
+    useEffect(() => {
+        setLoading(true)
+        setToken(window.sessionStorage.getItem('token'));
+        const authorization = "Bearer " + token;
+        axios.get('https://pwprojetoback-end.herokuapp.com/cesta/', {
+            headers: {
+                'Authorization': authorization
+            }
+        })
+            .then((res) => {
+                setDataCesta(res.data);
+                setError(false);
+                setLoading(false);
+            }).catch((error) => { console.log(error); setError(true); setLoading(false); })
+    }, [token])
+    
+    if (isLoading) return (
+        <div className="d-flex justify-content-center">
+            <div className="spinner-border text-secondary" role="status">
+                <span className="sr-only"></span>
+            </div>
+        </div>
+    )
+    
+    if (!error) {
+        if (dataCesta != {}) {
+            const produtos = dataCesta.produtos
+            return (
+                <>
+                    <div className="row ">
+                        <div className="col-10 offset-1 cartao p-3">
+                            <div className="row h4 mb-3">
+                                <h4>Produtos adicionados a cesta</h4>
+                            </div>
+
+                            <div className="row">
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>QTD</th>
+                                            <th>Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {produtos?.map((produto) => {
+                                            return (
+                                                <tr key={produto._id}>
+                                                    <td>{produto.nom_produto}</td>
+                                                    <td>1</td>
+                                                    <td>{produto.val_produto}</td>
+                                                </tr>
+                                            )
+                                        }
+                                        )}
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>{dataCesta.qtd_itens}</td>
+                                            <td>R$: {dataCesta.val_total}</td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div className="row">
+                                <div id="cesta-butoes">
+                                    <button type="button" className="btn mr-1 botao" title="Limpar os itens da cesta">LIMPAR CESTA</button>
+                                    <button type="button" className="btn mx-1 botao-sec" title="Finalizar compra" onClick={() => finalizar()}>FINALIZAR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <div className="row ">
+                        <div className="col-10 offset-1 cartao p-3">
+                            <div className="row h4 mb-3">
+                                <h4>A sua cesta está vazia</h4>
+                            </div>
+                        </div>
+                    </div>
+                </>
+            )
+        }
+    } else if (error) {
+        return (
+            <>
+                <div className="row my-3">
+                    <div className="alert alert-danger text-center" role="alert">
+                        <h4 className="text-center">Você precisa estar logado para ver a sua cesta</h4>
+                    </div>
+                </div>
+                <div className="text-center">
+                    <Link href='/login'><a className="text-center link2">Ir para a tela de login</a></Link>
+                </div>
+            </>
+        )
+    }
+
+}
 
 export default function Cesta() {
     return (
@@ -16,61 +136,7 @@ export default function Cesta() {
                         <hr />
                     </h4>
                 </div>
-
-
-                <div className="row ">
-                    <div className="col-10 offset-1 cartao p-3">
-                        <div className="row h4 mb-3">
-                            <h4>Produtos adicionados a cesta</h4>
-                        </div>
-
-                        <div className="row">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>Item</th>
-                                        <th>QTD</th>
-                                        <th>Valor</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Produto 1</td>
-                                        <td>1x</td>
-                                        <td>R$: 99,99</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 2</td>
-                                        <td>2x</td>
-                                        <td>R$: 144,40</td>
-
-                                    </tr>
-                                    <tr>
-                                        <td>Produto 3</td>
-                                        <td>1x</td>
-                                        <td>R$: 87,99</td>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr>
-                                        <td>Total</td>
-                                        <td></td>
-                                        <td>R$: 332,38</td>
-                                    </tr>
-                                </tbody>
-                                <tbody>
-                                    <tr></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div className="row">
-                            <div id="cesta-butoes">
-                                <button type="button" className="btn mr-1 botao" title="Limpar os itens da cesta">LIMPAR CESTA</button>
-                                <button type="button" className="btn mx-1 botao-sec" title="Finalizar compra" onClick={() => finalizar()}>FINALIZAR</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {BuscaCesta()}
             </main>
         </>
     )
@@ -78,4 +144,5 @@ export default function Cesta() {
 
 function finalizar() {
     alert("Compra finalizada com sucesso !!!!");
+    router.push(`/login`);
 }

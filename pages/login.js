@@ -30,6 +30,12 @@ function Logar() {
                 window.sessionStorage.setItem("token", res.data.token);
                 window.sessionStorage.setItem("id", res.data.cliente._id);
                 window.sessionStorage.setItem("nome", res.data.cliente.nom_cliente);
+                window.sessionStorage.setItem("cpf", res.data.cliente.num_cpf);
+                window.sessionStorage.setItem("email", res.data.cliente.des_email);
+                window.sessionStorage.setItem("endereco", res.data.cliente.des_endereco);
+                window.sessionStorage.setItem("telefone", res.data.cliente.num_telefone);
+                window.sessionStorage.setItem("cesta", res.data.cliente.cesta);
+
                 router.push(`/conta`);
                 setEnviar(false);
                 setLoading(false);
@@ -50,7 +56,7 @@ function Logar() {
         </div>
     )
 
-    if (error) {
+    if (error && !isLoading) {
         return (
             <>
                 <div className="row my-3">
@@ -127,6 +133,12 @@ function Logar() {
 
 
 export default function Login() {
+    const router = useRouter()
+    const token = window.sessionStorage.getItem("token");
+
+    if(token) {
+        router.push(`/conta`);
+    }
 
     return (
         <>

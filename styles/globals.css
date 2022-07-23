@@ -54,3 +54,12 @@ a {
 .link:hover {
 	color: #4E5166;
 }
+
+.link2 {
+	color: #4E5166;
+	text-decoration: underline;
+}
+
+.link2:hover {
+	color: #f79256;
+}

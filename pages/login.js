@@ -134,7 +134,7 @@ function Logar() {
 
 export default function Login() {
     const router = useRouter()
-    const token = window.sessionStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     if(token) {
         router.push(`/conta`);

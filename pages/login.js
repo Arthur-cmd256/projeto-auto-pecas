@@ -134,7 +134,12 @@ function Logar() {
 
 export default function Login() {
     const router = useRouter()
-    const token = sessionStorage.getItem("token");
+    const [token, setToken] = useState();
+    
+    useEffect(() => {
+        setToken(window.sessionStorage.getItem("token"));
+    }, [])
+    
 
     if(token) {
         router.push(`/conta`);

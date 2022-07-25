@@ -15,28 +15,47 @@ function BuscaCesta() {
     const [cesta, setCesta] = useState("")
 
     useEffect(() => {
-        setLoading(true)
+        setLoading(true);
+        setError(false);
         setCesta(window.sessionStorage.getItem('cesta'));
         setToken(window.sessionStorage.getItem('token'));
-        axios.get('https://pwprojetoback-end.herokuapp.com/cesta/', {
-            headers: {
-                'Authorization': "Bearer " + token
-            }
-        })
-            .then((res) => {
-                setDataCesta(res.data);
-                setError(false);
-                setLoading(false);
-            }).catch((error) => { console.log(error); setError(true); setLoading(false); })
+        if (token != null) {
+            axios.get('https://pwprojetoback-end.herokuapp.com/cesta/', {
+                headers: {
+                    'Authorization': "Bearer " + token
+                }
+            })
+                .then((res) => {
+                    setDataCesta(res.data);
+                    setError(false);
+                    setLoading(false);
+                }).catch((error) => { console.log(error); setError(true); setLoading(false); })
+        }
+
     }, [token])
 
-    if (isLoading) return (
+    if (isLoading && token != null) return (
         <div className="d-flex justify-content-center">
             <div className="spinner-border text-secondary" role="status">
                 <span className="sr-only"></span>
             </div>
         </div>
     )
+
+    if (token == null) {
+        return (
+            <>
+                <div className="row my-3">
+                    <div className="alert alert-danger text-center" role="alert">
+                        <h4 className="text-center">Você precisa estar logado para ver a sua cesta</h4>
+                    </div>
+                </div>
+                <div className="text-center">
+                    <Link href='/login'><a className="text-center link2">Ir para a tela de login</a></Link>
+                </div>
+            </>
+        )
+    }
 
     if (!error) {
         if (dataCesta.qtd_itens !== 0) {
@@ -103,16 +122,13 @@ function BuscaCesta() {
                 </>
             )
         }
-    } else if (error && !isLoading) {
+    } else {
         return (
             <>
                 <div className="row my-3">
-                    <div className="alert alert-danger text-center" role="alert">
-                        <h4 className="text-center">Você precisa estar logado para ver a sua cesta</h4>
+                    <div className="alert alert-warning text-center" role="alert">
+                        <h4 className="text-center">Lentidão ao carregar, por favor aguarde</h4>
                     </div>
-                </div>
-                <div className="text-center">
-                    <Link href='/login'><a className="text-center link2">Ir para a tela de login</a></Link>
                 </div>
             </>
         )
@@ -148,7 +164,7 @@ async function LimparCesta(token, cestaId, router) {
             'Authorization': "Bearer " + token
         }
     }).then((res) => {
-        sessionStorage.setItem("cesta", res.data);
+        sessionStorage.setItem("cesta", res.data.cestaId);
         alert("Cesta Limpa !!!!");
         router.push(`/`);
     }).catch((error) => console.log(error))

@@ -1,8 +1,11 @@
 import Head from "next/head"
 import Image from "next/image"
+import { useRouter } from "next/router"
+
+import axios from "axios"
 
 export async function getStaticProps(context) {
-    const {params} = context
+    const { params } = context
 
     const data = await fetch(`https://pwprojetoback-end.herokuapp.com/produto/${params.detalheId}`)
 
@@ -31,6 +34,7 @@ export async function getStaticPaths() {
 }
 
 export default function Detalhe({ produto }) {
+    const router = useRouter()
     const img = produto.img_produto.split("|");
     produto.val_produto = parseFloat(produto.val_produto).toFixed(2)
     const val_desc = parseFloat(produto.val_produto - ((produto.val_produto * 15) / 100)).toFixed(2);
@@ -51,10 +55,10 @@ export default function Detalhe({ produto }) {
                                     <Image src={img[0]} width="400px" height="400px" alt="" />
                                 </button>
                                 <button type="button" data-bs-target="#demo" data-bs-slide-to="1" className="d-block btn">
-                                    <Image src={img[1]}  width="400px" height="400px" alt="" />
+                                    <Image src={img[1]} width="400px" height="400px" alt="" />
                                 </button>
                                 <button type="button" data-bs-target="#demo" data-bs-slide-to="2" className="d-block btn">
-                                    <Image src={img[2]}  width="400px" height="400px" alt="" />
+                                    <Image src={img[2]} width="400px" height="400px" alt="" />
                                 </button>
                             </div>
                             <div className="col-10">
@@ -62,13 +66,13 @@ export default function Detalhe({ produto }) {
 
                                     <div className="carousel-inner text-center">
                                         <div className="carousel-item active">
-                                            <Image src={img[0]}  width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[0]} width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                         <div className="carousel-item">
-                                            <Image src={img[1]}  width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[1]} width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                         <div className="carousel-item">
-                                            <Image src={img[2]}  width="400px" height="400px" alt="" className="d-block w-100" />
+                                            <Image src={img[2]} width="400px" height="400px" alt="" className="d-block w-100" />
                                         </div>
                                     </div>
 
@@ -111,15 +115,15 @@ export default function Detalhe({ produto }) {
                             <div className="col">
                                 <div className="row text-center">
                                     <p className="m-0">Quantidade em estoque: {produto.qtd_produto}</p>
-                                    <button className="d-block btn botao-sec mb-1">Comprar</button>
-                                    <button className="btn botao">Adicionar ao carrinho</button>
+                                    <button className="d-block btn botao-sec mb-1" type="button" onClick={() => comprar(produto._id, router)}>Comprar</button>
+                                    <button className="btn botao" type="button" onClick={() => adicionar(produto._id, router)}>Adicionar ao carrinho</button>
                                 </div>
                             </div>
                         </div>
                         <div>
-                        <div className="row">
-                            <a href="#" className="link">Ver metodos de pagemento</a>
-                        </div>
+                            <div className="row">
+                                <a href="#" className="link">Ver metodos de pagemento</a>
+                            </div>
                         </div>
                         <div className="row border border-dark rounded my-3 mx-1 p-1">
                             <h5>Descrição</h5>
@@ -132,4 +136,50 @@ export default function Detalhe({ produto }) {
             </main>
         </>
     )
+}
+
+async function comprar(produtoId, router) {
+    const token = sessionStorage.getItem('token')
+    if (token !== null) {
+
+        const cestaId = sessionStorage.getItem('cesta');
+
+        // $.ajax({ url: "https://pwprojetoback-end.herokuapp.com/cesta/"+ cestaId, type: "PUT", data: { produto: produtoId }, beforeSend: function(xhr){xhr.setRequestHeader('Authorization', authorization)}})
+        axios.put('https://pwprojetoback-end.herokuapp.com/cesta/' + cestaId, { produto: produtoId }, {
+            headers: {
+                'Authorization': "Bearer " + token
+            }
+        })
+
+        alert('Vamos para cesta!');
+
+        router.push('/cesta');
+
+    } else {
+        alert('Para comprar, você precisa estar logado');
+        router.push('/login');
+    }
+
+}
+
+async function adicionar(produtoId, router) {
+    const token = sessionStorage.getItem('token')
+    if (token !== null) {
+
+        const cestaId = sessionStorage.getItem('cesta');
+
+
+        // $.ajax({ url: "https://pwprojetoback-end.herokuapp.com/cesta/" + cestaId, type: "PUT", data: { produto: produtoId }, beforeSend: function (xhr) { xhr.setRequestHeader('Authorization', authorization) } })
+        axios.put('https://pwprojetoback-end.herokuapp.com/cesta/' + cestaId, { produto: produtoId }, {
+            headers: {
+                'Authorization': "Bearer " + token
+            }
+        })
+
+        alert('Produto adicionado a cesta!');
+    } else {
+        alert('Para adicionar a cesta, você precisa estar logado');
+        router.push('/login');
+    }
+
 }

@@ -8,7 +8,7 @@ import { useState } from 'react'
 import { useEffect } from "react";
 
 
-function Logar() {
+function Logar(token) {
     const router = useRouter()
 
     const [enviar, setEnviar] = useState(false);
@@ -95,7 +95,7 @@ function Logar() {
             </>
         )
 
-    } else if (!error) {
+    } else if (!error && token == null) {
         return (
             <>
                 <div className="row">
@@ -161,7 +161,7 @@ export default function Login() {
                 </div>
                 <div className="row">
                     <div className="offset-3 col-6">
-                        {Logar()}
+                        {Logar(token)}
                     </div>
                 </div>
             </main>

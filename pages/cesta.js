@@ -1,24 +1,26 @@
 import axios from "axios";
 import Head from "next/head"
 import Link from "next/link";
+import { useRouter } from 'next/router'
 
 import { useState } from 'react'
 import { useEffect } from "react";
 
 function BuscaCesta() {
-
+    const router = useRouter()
     const [token, setToken] = useState('')
     const [dataCesta, setDataCesta] = useState({})
     const [error, setError] = useState(false)
     const [isLoading, setLoading] = useState(false)
+    const [cesta, setCesta] = useState("")
 
     useEffect(() => {
         setLoading(true)
+        setCesta(window.sessionStorage.getItem('cesta'));
         setToken(window.sessionStorage.getItem('token'));
-        const authorization = "Bearer " + token;
         axios.get('https://pwprojetoback-end.herokuapp.com/cesta/', {
             headers: {
-                'Authorization': authorization
+                'Authorization': "Bearer " + token
             }
         })
             .then((res) => {
@@ -27,7 +29,7 @@ function BuscaCesta() {
                 setLoading(false);
             }).catch((error) => { console.log(error); setError(true); setLoading(false); })
     }, [token])
-    
+
     if (isLoading) return (
         <div className="d-flex justify-content-center">
             <div className="spinner-border text-secondary" role="status">
@@ -35,9 +37,9 @@ function BuscaCesta() {
             </div>
         </div>
     )
-    
+
     if (!error) {
-        if (dataCesta != {}) {
+        if (dataCesta.qtd_itens !== 0) {
             const produtos = dataCesta.produtos
             return (
                 <>
@@ -82,8 +84,8 @@ function BuscaCesta() {
                             </div>
                             <div className="row">
                                 <div id="cesta-butoes">
-                                    <button type="button" className="btn mr-1 botao" title="Limpar os itens da cesta">LIMPAR CESTA</button>
-                                    <button type="button" className="btn mx-1 botao-sec" title="Finalizar compra" onClick={() => finalizar()}>FINALIZAR</button>
+                                    <button type="button" className="btn mr-1 botao" title="Limpar os itens da cesta" onClick={() => LimparCesta(token, cesta, router)}>LIMPAR CESTA</button>
+                                    <button type="button" className="btn mx-1 botao-sec" title="Finalizar compra" onClick={() => Finalizar(router)}>FINALIZAR</button>
                                 </div>
                             </div>
                         </div>
@@ -93,17 +95,15 @@ function BuscaCesta() {
         } else {
             return (
                 <>
-                    <div className="row ">
-                        <div className="col-10 offset-1 cartao p-3">
-                            <div className="row h4 mb-3">
-                                <h4>A sua cesta está vazia</h4>
-                            </div>
+                    <div className="row my-3">
+                        <div className="alert alert-info text-center" role="alert">
+                            <h4 className="text-center">A sua cesta está vazia</h4>
                         </div>
                     </div>
                 </>
             )
         }
-    } else if (error) {
+    } else if (error && !isLoading) {
         return (
             <>
                 <div className="row my-3">
@@ -142,7 +142,19 @@ export default function Cesta() {
     )
 }
 
-function finalizar() {
+async function LimparCesta(token, cestaId, router) {
+    axios.put('https://pwprojetoback-end.herokuapp.com/cesta/limpa/' + cestaId, {}, {
+        headers: {
+            'Authorization': "Bearer " + token
+        }
+    }).then((res) => {
+        sessionStorage.setItem("cesta", res.data);
+        alert("Cesta Limpa !!!!");
+        router.push(`/`);
+    }).catch((error) => console.log(error))
+}
+
+function Finalizar(router) {
     alert("Compra finalizada com sucesso !!!!");
-    router.push(`/login`);
+    router.push(`/`);
 }

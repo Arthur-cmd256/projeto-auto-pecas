@@ -1,7 +1,9 @@
 import Head from "next/head";
-import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 export default function Esqueci() {
+    const router = useRouter();
     return (
         <>
             <Head>
@@ -28,8 +30,8 @@ export default function Esqueci() {
                                 <label>
                                     E-mail:
                                 </label>
-                                <input id="email" type="email" className="form-control" placeholder="Digite o seu email cadastrado" />
-                                <button type="button" className="btn botao-sec mt-3" onClick={() => esqueci()}>Enviar</button>
+                                <input id="des_email" type="email" className="form-control" placeholder="Digite o seu email cadastrado" />
+                                <button type="button" className="btn botao-sec mt-3" onClick={() => esqueci(router)}>Enviar</button>
                             </form>
                         </div>
                     </div>
@@ -39,13 +41,21 @@ export default function Esqueci() {
     )
 }
 
-function esqueci(){
+async function esqueci(router){
 
-    if(email.value.length<6 || email.value.indexOf("@") <=0 || email.value.lastIndexOf(".") <=email.value.indexOf("@")  ){
-        alert("Informe um email valido !!");
-        email.focus();
+    const email = document.getElementById("des_email").value;
+
+    if(email.length < 6 || email.indexOf("@") <=0 || email.lastIndexOf(".") <= email.indexOf("@")  ){
+        alert("informe um email valido!!");
+        des_email.focus();
         return false;
     }
 
-    alert("Enviamos a você um email com um link para concluir a redefinição de sua senha!!");
-} 
+    axios.post("https://pwprojetoback-end.herokuapp.com/cliente/recuperar", { des_email : email }).then(() => {
+        alert("Enviamos a você um email com um link para concluir a redefinição de sua senha !!!!");
+        router.push('/altera');
+    }).catch((error) => {
+        console.log(error)
+        alert("Erro ao enviar email");
+    })
+}   
